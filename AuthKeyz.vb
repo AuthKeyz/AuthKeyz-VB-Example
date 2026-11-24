@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Security.Cryptography
 Imports System.Security.Cryptography.X509Certificates
 Imports System.Collections.Specialized
@@ -61,12 +61,12 @@ Namespace AuthKeyz
             enckey = sha256(iv_key())
             Dim init_iv = sha256(iv_key())
             Dim values_to_upload = New NameValueCollection From {
-                            {"type", byte_arr_to_str(Encoding.Default.GetBytes("init"))},
+                            {"type", byte_arr_to_str(Encoding.UTF8.GetBytes("init"))},
                             {"ver", encrypt(version, secret, init_iv)},
                             {"hash", checksum(Process.GetCurrentProcess().MainModule.FileName)},
                             {"enckey", encrypt(enckey, secret, init_iv)},
-                            {"name", byte_arr_to_str(Encoding.Default.GetBytes(name))},
-                            {"ownerid", byte_arr_to_str(Encoding.Default.GetBytes(ownerid))},
+                            {"name", byte_arr_to_str(Encoding.UTF8.GetBytes(name))},
+                            {"ownerid", byte_arr_to_str(Encoding.UTF8.GetBytes(ownerid))},
                             {"init_iv", init_iv}
                         }
             Dim response = req(values_to_upload)
@@ -88,13 +88,13 @@ Namespace AuthKeyz
             Dim hwid = WindowsIdentity.GetCurrent().User.Value
             Dim init_iv = sha256(iv_key()) ' can be changed to whatever you want
             Dim values_to_upload = New NameValueCollection From {
-                            {"type", byte_arr_to_str(Encoding.Default.GetBytes("login"))},
+                            {"type", byte_arr_to_str(Encoding.UTF8.GetBytes("login"))},
                             {"username", encrypt(username, enckey, init_iv)},
                             {"pass", encrypt(pass, enckey, init_iv)},
                             {"hwid", encrypt(hwid, enckey, init_iv)},
-                            {"sessionid", byte_arr_to_str(Encoding.Default.GetBytes(sessionid))},
-                            {"name", byte_arr_to_str(Encoding.Default.GetBytes(name))},
-                            {"ownerid", byte_arr_to_str(Encoding.Default.GetBytes(ownerid))},
+                            {"sessionid", byte_arr_to_str(Encoding.UTF8.GetBytes(sessionid))},
+                            {"name", byte_arr_to_str(Encoding.UTF8.GetBytes(name))},
+                            {"ownerid", byte_arr_to_str(Encoding.UTF8.GetBytes(ownerid))},
                             {"init_iv", init_iv}
                         }
             Dim response = req(values_to_upload)
@@ -113,14 +113,14 @@ Namespace AuthKeyz
             Dim hwid = WindowsIdentity.GetCurrent().User.Value
             Dim init_iv = sha256(iv_key()) ' can be changed to whatever you want
             Dim values_to_upload = New NameValueCollection From {
-                            {"type", byte_arr_to_str(Encoding.Default.GetBytes("register"))},
+                            {"type", byte_arr_to_str(Encoding.UTF8.GetBytes("register"))},
                             {"username", encrypt(username, enckey, init_iv)},
                             {"pass", encrypt(pass, enckey, init_iv)},
                             {"key", encrypt(key, enckey, init_iv)},
                             {"hwid", encrypt(hwid, enckey, init_iv)},
-                            {"sessionid", byte_arr_to_str(Encoding.Default.GetBytes(sessionid))},
-                            {"name", byte_arr_to_str(Encoding.Default.GetBytes(name))},
-                            {"ownerid", byte_arr_to_str(Encoding.Default.GetBytes(ownerid))},
+                            {"sessionid", byte_arr_to_str(Encoding.UTF8.GetBytes(sessionid))},
+                            {"name", byte_arr_to_str(Encoding.UTF8.GetBytes(name))},
+                            {"ownerid", byte_arr_to_str(Encoding.UTF8.GetBytes(ownerid))},
                             {"init_iv", init_iv}
                         }
             Dim response = req(values_to_upload)
@@ -139,12 +139,12 @@ Namespace AuthKeyz
             Dim hwid = WindowsIdentity.GetCurrent().User.Value
             Dim init_iv = sha256(iv_key()) ' can be changed to whatever you want
             Dim values_to_upload = New NameValueCollection From {
-                            {"type", byte_arr_to_str(Encoding.Default.GetBytes("upgrade"))},
+                            {"type", byte_arr_to_str(Encoding.UTF8.GetBytes("upgrade"))},
                             {"username", encrypt(username, enckey, init_iv)},
                             {"key", encrypt(key, enckey, init_iv)},
-                            {"sessionid", byte_arr_to_str(Encoding.Default.GetBytes(sessionid))},
-                            {"name", byte_arr_to_str(Encoding.Default.GetBytes(name))},
-                            {"ownerid", byte_arr_to_str(Encoding.Default.GetBytes(ownerid))},
+                            {"sessionid", byte_arr_to_str(Encoding.UTF8.GetBytes(sessionid))},
+                            {"name", byte_arr_to_str(Encoding.UTF8.GetBytes(name))},
+                            {"ownerid", byte_arr_to_str(Encoding.UTF8.GetBytes(ownerid))},
                             {"init_iv", init_iv}
                         }
             Dim response = req(values_to_upload)
@@ -161,12 +161,12 @@ Namespace AuthKeyz
             Dim hwid = WindowsIdentity.GetCurrent().User.Value
             Dim init_iv = sha256(iv_key()) ' can be changed to whatever you want
             Dim values_to_upload = New NameValueCollection From {
-                            {"type", byte_arr_to_str(Encoding.Default.GetBytes("license"))},
+                            {"type", byte_arr_to_str(Encoding.UTF8.GetBytes("license"))},
                             {"key", encrypt(key, enckey, init_iv)},
                             {"hwid", encrypt(hwid, enckey, init_iv)},
-                            {"sessionid", byte_arr_to_str(Encoding.Default.GetBytes(sessionid))},
-                            {"name", byte_arr_to_str(Encoding.Default.GetBytes(name))},
-                            {"ownerid", byte_arr_to_str(Encoding.Default.GetBytes(ownerid))},
+                            {"sessionid", byte_arr_to_str(Encoding.UTF8.GetBytes(sessionid))},
+                            {"name", byte_arr_to_str(Encoding.UTF8.GetBytes(name))},
+                            {"ownerid", byte_arr_to_str(Encoding.UTF8.GetBytes(ownerid))},
                             {"init_iv", init_iv}
                         }
             Dim response = req(values_to_upload)
@@ -203,7 +203,7 @@ Namespace AuthKeyz
                     ' ServicePointManager.ServerCertificateValidationCallback = AddressOf others.pin_public_key
                     Dim raw_response = client.UploadValues("https://authkeyz.bond/api/1.0/", post_data)
                     ' ServicePointManager.ServerCertificateValidationCallback = Function(send, certificate, chain, sslPolicyErrors) True
-                    Return Encoding.Default.GetString(raw_response)
+                    Return Encoding.UTF8.GetString(raw_response)
                 End Using
 
             Catch
@@ -278,7 +278,7 @@ Namespace AuthKeyz
                 Using aes_encryptor As ICryptoTransform = encryptor.CreateEncryptor()
 
                     Using crypt_stream As CryptoStream = New CryptoStream(mem_stream, aes_encryptor, CryptoStreamMode.Write)
-                        Dim p_bytes As Byte() = Encoding.Default.GetBytes(plain_text)
+                        Dim p_bytes As Byte() = Encoding.UTF8.GetBytes(plain_text)
                         crypt_stream.Write(p_bytes, 0, p_bytes.Length)
                         crypt_stream.FlushFinalBlock()
                         Dim c_bytes As Byte() = mem_stream.ToArray()
@@ -303,7 +303,7 @@ Namespace AuthKeyz
                         crypt_stream.Write(c_bytes, 0, c_bytes.Length)
                         crypt_stream.FlushFinalBlock()
                         Dim p_bytes As Byte() = mem_stream.ToArray()
-                        Return Encoding.Default.GetString(p_bytes, 0, p_bytes.Length)
+                        Return Encoding.UTF8.GetString(p_bytes, 0, p_bytes.Length)
                     End Using
                 End Using
             End Using
@@ -314,27 +314,19 @@ Namespace AuthKeyz
         End Function
 
         Public Function sha256(ByVal r As String) As String
-            Return byte_arr_to_str(New SHA256Managed().ComputeHash(Encoding.Default.GetBytes(r)))
+            Return byte_arr_to_str(New SHA256Managed().ComputeHash(Encoding.UTF8.GetBytes(r)))
         End Function
 
         Public Function encrypt(ByVal message As String, ByVal enc_key As String, ByVal iv As String) As String
-            Dim _key As Byte() = Encoding.Default.GetBytes(sha256(enc_key).Substring(0, 32))
-            Dim _iv As Byte() = Encoding.Default.GetBytes(sha256(iv).Substring(0, 16))
+            Dim _key As Byte() = Encoding.UTF8.GetBytes(sha256(enc_key).Substring(0, 32))
+            Dim _iv As Byte() = Encoding.UTF8.GetBytes(sha256(iv).Substring(0, 16))
             Return encrypt_string(message, _key, _iv)
         End Function
 
         Public Function decrypt(ByVal message As String, ByVal enc_key As String, ByVal iv As String) As String
-            Dim _key As Byte() = Encoding.Default.GetBytes(sha256(enc_key).Substring(0, 32))
-            Dim _iv As Byte() = Encoding.Default.GetBytes(sha256(iv).Substring(0, 16))
+            Dim _key As Byte() = Encoding.UTF8.GetBytes(sha256(enc_key).Substring(0, 32))
+            Dim _iv As Byte() = Encoding.UTF8.GetBytes(sha256(iv).Substring(0, 16))
             Return decrypt_string(message, _key, _iv)
-        End Function
-
-        Public Function unix_to_date(ByVal unixTimeStamp As Double) As Date
-            Return New DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(unixTimeStamp).ToLocalTime()
-        End Function
-
-        Public Function pin_public_key(ByVal sender As Object, ByVal certificate As X509Certificate, ByVal chain As X509Chain, ByVal sslPolicyErrors As SslPolicyErrors) As Boolean
-            Return Equals(certificate.GetPublicKeyString(), "3082010A028201010082BD4F6711C71AB8716DC67EB8C48B0535E910D49D6F5F125D37A68AE0907FA108FF4F975B9CB58036539C3BBD177912DCE101D871D60DD3A5B84176E89B45F991FE7952FA6DC39C8F0C38798F9312AC523093D1F93EFE16DC7212184AC516E983DCD998DAA543211206171C28795A85A079809F364CC991518B7A31F71B166B6763989D9B6A317B6E3C3F3D01BD516EF76B5FEA5978EFC422C9B870867800C16F204137C8A0A811D058CC657E37EA6DD84E68A9F73E2D52D08EFE4E743A85C27ACFAB2EBBD68797529B17B74C9033D019E1383E3CD34D1088342A67148295704A7192502A5299503510B6F07978D1D42A884DE2F830A6FC393136E9F0C245D50203010001")
         End Function
     End Module
 
@@ -362,7 +354,7 @@ Namespace AuthKeyz
         End Function
 
         Public Function string_to_object(ByVal json As String) As Object
-            Dim buffer = Encoding.Default.GetBytes(json)
+            Dim buffer = Encoding.UTF8.GetBytes(json)
 
 
             'SerializationException = session expired
